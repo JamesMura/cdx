@@ -1,0 +1,177 @@
+{
+  "metadata": {
+    "version": "0.0.5",
+    "api_version": "1.5.0",
+    "signature": "",
+    "conditions": [
+      "mtb",
+      "stm",
+      "emb",
+      "rif",
+      "pza",
+      "inh",
+      "pas",
+      "tch",
+      "lvx",
+      "atsc"
+    ],
+    "source": {
+      "type": "headless_csv",
+      "separator": ","
+    }
+  },
+  "custom_fields": {
+  },
+  "field_mapping": {
+    "patient.id": { "lookup": "4" },
+    "patient.name": { "lookup": "3" },
+    "sample.id": { "lookup": "0" },
+    "encounter.patient_age": {
+      "if" : [
+        {"equals" : [{"lookup" : "19"}, null]},
+        "",
+        {
+          "duration": {
+            "years": {
+              "years_between" : [
+                {"parse_date" : [
+                  {"lookup" : "19"},
+                  "%Y-%m-%d %H:%M:%S.%L"
+                ]},
+                {"parse_date" : [
+                  {"lookup" : "13"},
+                  "%Y-%m-%d %H:%M:%S.%L"
+                ]}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "test.id": {
+      "concat" : [
+          {"lookup" : "0"},
+          "-",
+          {"lookup" : "9"},
+          "-",
+          {"lookup" : "1"},
+          "-",
+          {"lookup" : "2"}
+      ]
+    },
+    "test.start_time": {
+      "parse_date": [
+        {
+          "lookup": "13"
+        },
+        "%Y-%m-%d %H:%M:%S.%L"
+      ]
+    },
+    "test.end_time": {
+      "parse_date": [
+        {
+          "lookup": "12"
+        },
+        "%Y-%m-%d %H:%M:%S.%L"
+      ]
+    },
+    "test.name": { "lookup": "7" },
+    "test.assays.condition": {
+      "if" : [
+        {"equals" : [{"lookup" : "11"}, "AST - MGIT"]},
+        {
+          "case": [
+          {"lookup" : "14"},
+          [
+            {"when": "Estreptomicina", "then" : "stm"},
+            {"when": "Etambutol", "then" : "emb"},
+            {"when": "Rifampicina", "then" : "rif"},
+            {"when": "Pirazinamida", "then" : "pza"},
+            {"when": "Isoniazid", "then" : "inh"},
+            {"when": "*cido p-Aminosalic*lico", "then" : "pas"},
+            {"when": "Hidrazida del *cido tiofenocarbox*lico", "then" : "tch"},
+            {"when": "Levofloxacino", "then" : "lvx"},
+            {"when": "Tiosemicarbazona", "then" : "atsc"},
+            {"when": "*", "then" : "mtb"}
+          ]
+        ]},
+        "mtb"
+      ]
+    },
+    "test.assays.name": {
+      "if" : [
+        {"equals" : [{"lookup" : "11"}, "AST - MGIT"]},
+        {
+          "case": [
+          {"lookup" : "14"},
+          [
+            {"when": "Estreptomicina", "then" : "streptomycin"},
+            {"when": "Etambutol", "then" : "ethambutol"},
+            {"when": "Rifampicina", "then" : "rifampicin"},
+            {"when": "Pirazinamida", "then" : "pyrazinamide"},
+            {"when": "Isoniazid", "then" : "isoniazid"},
+            {"when": "*cido p-Aminosalic*lico", "then" : "p_aminosalicyclic_acid"},
+            {"when": "Hidrazida del *cido tiofenocarbox*lico", "then" : "thiophenecarboxylic_acid_hydrazide"},
+            {"when": "Levofloxacino", "then" : "levofloxacin"},
+            {"when": "Tiosemicarbazona", "then" : "thiosemicarbazone"},
+            {"when": "*", "then" : "mycobacterium_tuberculosis"}
+          ]
+        ]},
+        "mycobacterium_tuberculosis"
+      ]
+    },
+    "test.assays.result": {
+      "if" : [
+        {"equals" : [{"lookup" : "11"}, "AST - MGIT"]},
+        {
+          "case": [
+          {"lookup" : "15"},
+          [
+            {"when": "R", "then" : "positive"},
+            {"when": "S", "then" : "negative"},
+            {"when": "*", "then" : "n/a"}
+          ]
+        ]},
+        {
+          "case" : [
+            {"lookup" : "9"},
+            [
+              {"when": "Positivo", "then" : "positive"},
+              {"when": "Negativo", "then" : "negative"},
+              {"when": "*", "then" : "n/a"}
+            ]
+          ]
+        }
+      ]
+    },
+    "test.status": {
+      "if" : [
+        {"equals" : [{"lookup" : "11"}, "AST - MGIT"]},
+        {
+          "case": [
+          {"lookup" : "15"},
+          [
+            {"when": "S", "then" : "success"},
+            {"when": "R", "then" : "success"},
+            {"when": "*", "then" : "invalid"}
+          ]
+        ]},
+        {
+          "case" : [
+            { "lookup": "9" },
+            [
+              {"when" : "Positivo", "then" : "success" },
+              {"when" : "Completo retirado", "then" : "success" },
+              {"when" : "Negativo", "then" : "success" },
+              {"when" : "No válido", "then" : "invalid" },
+              {"when" : "En curso retirado", "then" : "error" },
+              {"when" : "Umbral positivo", "then" : "no_result" },
+              {"when" : "*", "then" : "unknown"}
+            ]
+          ]
+        }
+      ]
+    },
+    "test.type": "specimen"
+  }
+}

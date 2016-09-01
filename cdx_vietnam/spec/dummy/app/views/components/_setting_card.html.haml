@@ -1,0 +1,10 @@
+.col.px-4.summary{class:setting_card[:colour], data: {href: setting_card[:href] } }
+  %h2
+    = setting_card[:title]
+  .stat
+    .empty-icon.centered
+      %span
+        %i.fa{class: setting_card[:icon]}
+
+    %p
+      = setting_card[:body]

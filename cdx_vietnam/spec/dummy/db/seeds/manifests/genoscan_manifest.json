@@ -1,0 +1,162 @@
+{
+  "metadata" : {
+    "version" : "0.0.10",
+    "api_version" : "1.5.0",
+    "signature" : "",
+    "conditions": ["mtb", "rif", "inh"],
+    "source": { "type" : "csv", "separator" : ";" }
+  },
+  "custom_fields" : {
+    "test.clia_waived_test": {
+    },
+    "test.revision": {
+    },
+    "test.control": {
+    },
+    "test.ig_type": {
+    },
+    "test.control_strip": {
+    },
+    "test.bands": {
+    }
+  },
+  "field_mapping" : {
+    "patient.id" : {"lookup" : "PID"},
+    "patient.name" : {
+      "if" : [
+        {"equals" : [{"lookup" : "LastName"}, "n.a."]},
+        null,
+        {
+          "concat" : [
+              {"lookup" : "Firstname"},
+              " ",
+              {"lookup" : "LastName"}
+          ]
+        }
+      ]
+    },
+    "encounter.patient_age" : {
+      "if" : [
+        {"equals" : [{"lookup" : "Birthday"}, "n.a."]},
+        null,
+        {
+          "duration" : {
+            "years" : {
+              "years_between" : [
+                {"parse_date" : [
+                  {"lookup" : "Birthday"},
+                  "%d.%m.%Y"
+                ]},
+                {"parse_date" : [
+                  {"lookup" : "DateOfAnalysis"},
+                  "%d.%m.%Y"
+                ]}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "patient.gender" : {
+      "case" : [
+        {"lookup" : "Sex"},
+        [
+          {"when": "*n.a.*", "then" : null},
+          {"when": "*Female*", "then" : "female"},
+          {"when": "*", "then" : "male"}
+        ]
+      ]
+    },
+    "sample.id" : {
+      "case" : [
+        {"lookup" : "SampleNo."},
+        [
+          {"when": "n.a.", "then" : null},
+          {"when": "*", "then" : {"lookup" : "SampleNo."}}
+        ]
+      ]
+    },
+    "test.start_time" : {
+      "parse_date" : [
+          {"lookup" : "DateOfAnalysis"},
+          "%d.%m.%Y"
+        ]
+    },
+    "test.site_user" : {"lookup" : "WindowsUser"},
+    "test.name" : {"lookup" : "TypeOfTest"},
+    "test.assays" : {
+      "script" : "
+        if(message['Result'].match(/.*tuberculosis.*/)){
+          mtb = 'positive'
+        } else {
+          mtb = 'negative'
+        };
+        if(message['Result'].match(/.*RMP resistant.*/)){
+          rif = 'positive'
+        } else {
+          rif = 'negative'
+        };
+        if(message['Result'].match(/.*INH resistant.*/)){
+          inh = 'positive'
+        } else {
+          inh = 'negative'
+        };
+        [
+          {
+            'condition' : 'mtb',
+            'name' : 'mtb',
+            'result' : mtb
+          },
+          {
+            'condition' : 'rif',
+            'name' : 'rif',
+            'result' : rif
+          },
+          {
+            'condition' : 'inh',
+            'name' : 'inh',
+            'result' : inh
+          }
+        ]
+      "
+    },
+    "test.status" : "success",
+    "test.type" : {
+      "case" : [
+        {"lookup" : "Strip-Type"},
+        [
+          {"when": "*Patient*", "then" : "specimen"},
+          {"when": "*", "then" : "qc"}
+        ]
+      ]
+    },
+    "test.clia_waived_test" : {"lookup" : "CW"},
+    "test.revision" : {"lookup" : "Revision"},
+    "test.control" : {"lookup" : "Control"},
+    "test.ig_type" : {
+      "case" : [
+        {"lookup" : "Ig-Type"},
+        [
+          {"when": "*IgA*", "then" : "ig_a"},
+          {"when": "*IgG*", "then" : "ig_g"},
+          {"when": "*IgM*", "then" : "ig_m"},
+          {"when": "*", "then" : "unknown"}
+        ]
+      ]
+    },
+    "test.control_strip" : {
+      "case" : [
+        {"lookup" : "Strip-Type"},
+        [
+          {"when": "*Patient*", "then" : "patient"},
+          {"when": "*Cut-Off*", "then" : "cut_off"},
+          {"when": "*Avidity*", "then" : "avidity"},
+          {"when": "*Liquor*", "then" : "liquor"},
+          {"when": "*Positive*", "then" : "positive"},
+          {"when": "*Negative*", "then" : "negative"}
+        ]
+      ]
+    },
+    "test.bands" : {"lookup" : "Bands"}
+  }
+}

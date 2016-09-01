@@ -1,6 +1,6 @@
 module CdxVietnam
   class Engine < ::Rails::Engine
-    config.autoload_paths += %W(#{CdxCore::Engine.root}/lib)
+    config.autoload_paths += %W(#{CdxVietnam::Engine.root}/lib)
     config.i18n.load_path += Dir[File.join(CdxVietnam::Engine.root, 'config', 'locales', '**', '*.{rb,yml}')]
 
     initializer :append_migrations do |app|

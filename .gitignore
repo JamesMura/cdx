@@ -13,11 +13,10 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
-cdx_core/spec/dummy/log/*
-cdx_vietnam/spec/dummy/log/*
+*/spec/dummy/log/*
 /tmp
-cdx_core/tmp
-cdx_core/spec/dummy/tmp
+*/tmp
+*/spec/dummy/tmp
 
 backend/_build
 backend/deps
@@ -39,8 +38,8 @@ bin/rspec
 bin/rake
 config/settings.local.yml
 config/settings/*.local.yml
-cdx_core/config/settings.local.yml
-cdx_core/config/settings/*.local.yml
+*/config/settings.local.yml
+*/config/settings/*.local.yml
 public/system
 examples.txt
 Procfile.local

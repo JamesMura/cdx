@@ -1,0 +1,24 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  host: <%= ENV["MYSQL_HOST"] %>
+  username: <%= ENV["MYSQL_USERNAME"] || "root" %>
+  password: <%= ENV["MYSQL_PASSWORD"] || "" %>
+
+development:
+  <<: *default
+  database: cdp_development
+  reconnect: true
+
+test: &test
+  <<: *default
+  database: cdp_test
+
+production:
+  <<: *default
+  database: cdp
+  reconnect: true
+
+cucumber:
+  <<: *test
