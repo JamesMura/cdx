@@ -1,0 +1,11 @@
+en:
+  home:
+    settings:
+      header: 'Settings'
+      alerts_notice: 'Keep your team notified about important stuff.'
+      roles_notice: 'Manage users permissions with reusable policies'
+      ftp_notice: 'Device FTP settings'
+      sites_notice: 'Manage the sites'
+      models_notice: 'Manage device models'
+      users_notice: 'Manager users'
+      messages_notice: 'Manage the logs'
