@@ -43,14 +43,14 @@ class PatientsController < ApplicationController
     @patient      = @institution.patients.new(patient_params)
     @patient.site = @navigation_context.site
 
-    if validate_name_and_entity_id && @patient.save_and_audit(current_user, "New patient #{@patient.name} added")
+    if validate_name_and_entity_id && @patient.save_and_audit(current_user, I18n.t('patients.create.audit_log', patient_name: @patient.name))
       next_url = if params[:next_url].blank?
         patient_path(@patient)
       else
         "#{params[:next_url]}#{params[:next_url].include?('?') ? '&' : '?'}patient_id=#{@patient.id}"
       end
 
-      redirect_to next_url, notice: 'Patient was successfully created.'
+      redirect_to next_url, notice: I18n.t('patients.create.success')
     else
       render action: 'new'
     end
@@ -69,8 +69,8 @@ class PatientsController < ApplicationController
     return unless authorize_resource(@patient, UPDATE_PATIENT)
     parse_date_of_birth
 
-    if name_is_present? && @patient.update_and_audit(patient_params, current_user, "#{@patient.name} patient details have been updated")
-      redirect_to patient_path(@patient), notice: 'Patient was successfully updated.'
+    if name_is_present? && @patient.update_and_audit(patient_params, current_user, I18n.t('patients.update.audit_log', patient_name: @patient.name))
+      redirect_to patient_path(@patient), notice: I18n.t('patients.update.success')
     else
       render action: 'edit'
     end
@@ -82,14 +82,14 @@ class PatientsController < ApplicationController
 
     @patient.destroy
 
-    redirect_to patients_path, notice: 'Patient was successfully deleted.'
+    redirect_to patients_path, notice: I18n.t('patients.destroy.success')
   end
 
   private
 
   def patient_params
     params.require(:patient).permit(
-      :name, :entity_id, :gender, :nickname, :birth_date_on, :lat, :lng, :location_geoid, :address, :email, :phone, :city, :state, :zip_code,
+      :name, :entity_id, :gender, :nickname, :social_security_code, :birth_date_on, :lat, :lng, :location_geoid, :address, :email, :phone, :city, :state, :zip_code,
       addresses_attributes: [ :id, :address, :city, :state, :zip_code ]
     )
   end

@@ -27,6 +27,15 @@
   .row
     .col.pe-2
       %div.tooltip
+        = f.label :social_security_code
+        %div.tooltiptext_r
+          = I18n.t('patients.form.social_security_code_tooltip')
+    .col
+      = f.text_field :social_security_code, :class => 'input-large'
+
+  .row
+    .col.pe-2
+      %div.tooltip
         = f.label :entity_id
         %div.tooltiptext_r
           = I18n.t('patients.form.entity_id_tooltip')

@@ -32,6 +32,13 @@ en:
     create:
       no_entity: "Entity Id can't be blank"
       no_name: "Name can't be blank"
+      success: 'Patient was successfully created.'
+      audit_log: 'New patient %{patient_name} added'
+    update:
+      success: 'Patient was successfully updated.'
+      audit_log: '%{patient_name} patient details have been updated'
+    destroy:
+      success: 'Patient was successfully deleted.'
     form:
       select_day: 'Select day'
       select_month: 'Select month'
@@ -44,6 +51,7 @@ en:
       estimate_age_tooltip: 'Enter an age in here and the DOB year will be automatically populated based on it'
       email_tooltip: 'The Patients Email Address'
       phone_tooltip: 'A Phone number the Patient can be contacted on'
+      social_security_code_tooltip: 'Social security Id. of the patient.'
     index:
       no_patients: 'No patients registered'
       keep_organized: 'Keep your test orders organized under patients medical history'

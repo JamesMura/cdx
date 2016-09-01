@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160816140022) do
+ActiveRecord::Schema.define(version: 20160901123912) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "uuid",             limit: 255
@@ -506,7 +506,6 @@ ActiveRecord::Schema.define(version: 20160816140022) do
     t.string   "results_other2",       limit: 255
     t.string   "results_other3",       limit: 255
     t.string   "results_other4",       limit: 255
-    t.string   "culture_format",       limit: 255
     t.string   "trace",                limit: 255
     t.string   "test_result",          limit: 255
     t.string   "method_used",          limit: 255
@@ -524,29 +523,30 @@ ActiveRecord::Schema.define(version: 20160816140022) do
   add_index "patient_results", ["uuid"], name: "index_patient_results_on_uuid", using: :btree
 
   create_table "patients", force: :cascade do |t|
-    t.binary   "sensitive_data", limit: 65535
-    t.text     "custom_fields",  limit: 65535
-    t.text     "core_fields",    limit: 65535
-    t.string   "entity_id_hash", limit: 255
-    t.string   "uuid",           limit: 255
-    t.integer  "institution_id", limit: 4
+    t.binary   "sensitive_data",       limit: 65535
+    t.text     "custom_fields",        limit: 65535
+    t.text     "core_fields",          limit: 65535
+    t.string   "entity_id_hash",       limit: 255
+    t.string   "uuid",                 limit: 255
+    t.integer  "institution_id",       limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "is_phantom",                   default: true
+    t.boolean  "is_phantom",                         default: true
     t.datetime "deleted_at"
-    t.string   "location_geoid", limit: 60
-    t.float    "lat",            limit: 24
-    t.float    "lng",            limit: 24
-    t.string   "address",        limit: 255
-    t.string   "name",           limit: 255
-    t.string   "entity_id",      limit: 255
-    t.integer  "site_id",        limit: 4
-    t.string   "site_prefix",    limit: 255
-    t.string   "state",          limit: 255
-    t.string   "city",           limit: 255
-    t.string   "zip_code",       limit: 255
-    t.string   "nickname",       limit: 255
+    t.string   "location_geoid",       limit: 60
+    t.float    "lat",                  limit: 24
+    t.float    "lng",                  limit: 24
+    t.string   "address",              limit: 255
+    t.string   "name",                 limit: 255
+    t.string   "entity_id",            limit: 255
+    t.integer  "site_id",              limit: 4
+    t.string   "site_prefix",          limit: 255
+    t.string   "state",                limit: 255
+    t.string   "city",                 limit: 255
+    t.string   "zip_code",             limit: 255
+    t.string   "nickname",             limit: 255
     t.date     "birth_date_on"
+    t.string   "social_security_code", limit: 255,   default: ""
   end
 
   add_index "patients", ["birth_date_on"], name: "index_patients_on_birth_date_on", using: :btree
@@ -767,6 +767,12 @@ ActiveRecord::Schema.define(version: 20160816140022) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
+  add_foreign_key "alerts", "institutions"
+  add_foreign_key "alerts", "sites"
+  add_foreign_key "audit_logs", "encounters"
+  add_foreign_key "audit_logs", "patient_results"
+  add_foreign_key "audit_logs", "requested_tests"
+  add_foreign_key "device_messages", "sites"
   add_foreign_key "encounters", "sites"
   add_foreign_key "encounters", "users"
   add_foreign_key "episodes", "patients"
