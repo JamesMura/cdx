@@ -11,7 +11,7 @@ en:
         address: 'Address'
         created_at: 'Created at'
         nickname: 'Nickname'
-        social_security_code_id: 'Social security ID.'
+        social_security_code: 'Social security ID'
   patient:
     model_form:
       wrong_date: 'should be a date in %{birth_date_on_placeholder}'
