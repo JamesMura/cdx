@@ -19,13 +19,7 @@
 
     });
 
-  %ul.tabs#epitabs
-    %li#tab_tb
-      = link_to I18n.t('episode_type.tb'),'#'
-    %li#tab_hiv
-      = link_to I18n.t('episode_type.hiv'),'#'
-    %li#tab_ebola
-      = link_to I18n.t('episode_type.ebola'),'#'
+  = render partial: 'disease_tabs', locals: { f: f }
 
   .panel.panel-tab#episodetype_ebola
     .row
