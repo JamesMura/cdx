@@ -1,5 +1,6 @@
 class RegistrationsController < Devise::RegistrationsController
 
+  before_action :authenticate_user!
   before_filter :load_locales
   skip_before_filter :ensure_context, except: :edit
 
@@ -17,7 +18,7 @@ class RegistrationsController < Devise::RegistrationsController
       params[:password_confirmation] ||= ""
     end
     # Update the resource as usual
-    result = resource.update(params)
+    result = resource.update_with_password(params)
     clean_up_passwords(resource)
     result
   end
@@ -37,6 +38,6 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def account_update_params
-    params.require(:user).permit(:first_name, :last_name, :password, :password_confirmation, :locale, :time_zone, :timestamps_in_device_time_zone)
+    params.require(:user).permit(:first_name, :last_name, :current_password, :password, :password_confirmation, :locale, :time_zone, :timestamps_in_device_time_zone)
   end
 end
