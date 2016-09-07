@@ -8,6 +8,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   # Do not require current password for update, since a user registered via Omniauth has an unknown random password assigned
   # TODO: Remove required password validation for users signed up via Omniauth, and do require current password here
+  # resource here is a: User
   def update_resource(resource, params)
     # Do not update password if nothing is entered
     if params[:password].blank?
@@ -18,9 +19,8 @@ class RegistrationsController < Devise::RegistrationsController
       params[:password_confirmation] ||= ""
     end
     # Update the resource as usual
-    result = resource.update_with_password(params)
-    clean_up_passwords(resource)
-    result
+    # update with password does a cleanup internally.  Returns boolean
+    resource.update_with_password(params)
   end
 
   def after_update_path_for(resource)
