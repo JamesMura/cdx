@@ -7,18 +7,16 @@
     = Gon::Base.render_data({})
     = stylesheet_link_tag "application", :media => "all"
     = javascript_include_tag "es5-shim" if Rails.env.test?
-    = javascript_include_tag "application" if @usenav
+    = javascript_include_tag "application"
     = csrf_meta_tags
   %body{class: @body_class}
     .wrapper
-      - if @usenav
-        %header
-          = render "shared/header_nav"
+      %header
+        = render "shared/header_nav"
 
       .content.row
         = flash_message
-        - if @usenav
-          .col.px-3#context_side_bar{"data-context-react-props": {context: @navigation_context.try(:to_hash) || {}}.to_json}
+        .col.px-3#context_side_bar{"data-context-react-props": {context: @navigation_context.try(:to_hash) || {}}.to_json}
         #contentcontainer.col.maincol
           #contentsection
             = yield(:subheader)
